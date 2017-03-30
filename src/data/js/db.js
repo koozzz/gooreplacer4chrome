@@ -11,6 +11,8 @@ var GooRule = function(srcURL, dstObj) {
             var reversedUrl = reverse(url);
             return reverse(reversedUrl.replace(/([\*|\?])(?!\\)/g,"$1."));
     };
+    this.includePatterns = [];
+    this.excludePatterns = [];
     this.kind   = dstObj.kind || WILDCARD; //规则默认为WILDCARD类型
     this.dstURL = dstObj.dstURL;
     this.enable = dstObj.hasOwnProperty("enable")? dstObj.enable : true;   //规则默认开启
@@ -18,6 +20,23 @@ var GooRule = function(srcURL, dstObj) {
         return this.kind === WILDCARD;
     }
     this.srcURL = this.isWildcard() ? replaceWildcard(srcURL) : srcURL;
+
+    if(dstObj.includePatterns){
+    for(var i=0;i<dstObj.includePatterns.length;i++)
+        {
+            patternurl = dstObj.includePatterns[i];
+            this.includePatterns.push(this.isWildcard() ? replaceWildcard(patternurl) : patternurl);
+        }
+    }
+
+    if(dstObj.excludePatterns){
+        for(var i=0;i<dstObj.excludePatterns.length;i++)
+        {
+            patternurl = dstObj.excludePatterns[i];
+            this.excludePatterns.push(this.isWildcard() ? replaceWildcard(patternurl) : patternurl);
+        }
+    }
+
 
     this.toJson = function() {
         var json = {};
@@ -31,6 +50,8 @@ var GooRule = function(srcURL, dstObj) {
         return {
             dstURL : this.dstURL,
             kind: this.kind,
+            includePatterns : this.includePatterns,
+            excludePatterns : this.excludePatterns,
             enable : this.enable
         };
     }
@@ -47,6 +68,35 @@ var GooRule = function(srcURL, dstObj) {
         } else {
             return this.srcURL;
         }
+    }
+    this.isMatch = function(url){
+        var i=0,isMatch = false;
+        if(this.includePatterns.length == 0){
+            isMatch = true;
+        }
+        else
+        {
+            for(i=0;i<this.includePatterns.length;i++)
+            {
+                var redirectRE = new RegExp(this.includePatterns[i],"i");
+                if(redirectRE.exec(url))
+                {
+                    isMatch = true;
+                    break;
+                }
+            }
+        }
+
+        for(i=0;i<this.excludePatterns.length;i++)
+        {
+            var redirectRE = new RegExp(this.excludePatterns[i],"i");
+            if(redirectRE.exec(url))
+            {
+                isMatch = false;
+                break;
+            }
+        }
+        return isMatch;
     }
 }
 var GooOnlineURL = function(url, interval, enable) {
@@ -67,12 +117,13 @@ var gooDB = new (function () {
         ISREDIRECT_KEY = "isRedirect";
     var ONLINE_URL_KEY = "onlineRulesURL",
         online_url = {
-            url: "https://raw.githubusercontent.com/jiacai2050/gooreplacer4chrome/master/gooreplacer.gson",
+            url: "https://raw.githubusercontent.com/koozzz/gooreplacer4chrome/master/gooreplacer.gson",
             interval: 0,
             enable: true
         };
     var LAST_UPDATE_KEY = "onlineLastUpdateTime";
     var ONLINE_RULES_KEY = "onlineRules";
+    this.rules = [];
     this.init = function() {
         if(!localStorage.getItem(ISREDIRECT_KEY)) {
             localStorage.setItem(ISREDIRECT_KEY, true);
@@ -93,12 +144,22 @@ var gooDB = new (function () {
     this.setLastUpdateTime = function(updateTime) {
         localStorage.setItem(LAST_UPDATE_KEY, updateTime);
     }
-    this.getRules = function(db) {
-        var db = db || RULES_KEY;
+    this.updateRules = function() {
+        // var db = db || RULES_KEY;
         var arr = [];
-        var jsonRules = JSON.parse(localStorage.getItem(db));
+        var jsonRules = JSON.parse(localStorage.getItem(ONLINE_RULES_KEY));
         for(var k in jsonRules) {
             arr.push(new GooRule(k, jsonRules[k]));
+        }
+        this.rules = arr;
+    }
+    this.getRules = function(url) {
+        var i=0,arr = [];
+        for(i=0;i<this.rules.length;i++) {
+            if(this.rules[i].isMatch(url))
+            {
+                arr.push(this.rules[i]);
+            }
         }
         return arr;
     }
@@ -124,6 +185,7 @@ var gooDB = new (function () {
             //如果 ruleKey == null， 清空之前的所有规则
             localStorage.removeItem(db);
         }
+        this.rules = [];
     }
     this.updateRule = function(srcURL, rule, db) {
         var db = db || RULES_KEY;

@@ -16,6 +16,7 @@ function fetchRules(cb) {
                         gooDB.addRule(new GooRule(key, jsonRules[key]), db);
                     }
                     var now = Date.now();
+                    gooDB.updateRules();
                     gooDB.setLastUpdateTime(now);
                     cb({code: 0, msg: `在线规则更新成功！更新时间：${new Date(now).toLocaleString()}`, updateTime: now});
                 } else {

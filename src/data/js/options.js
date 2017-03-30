@@ -1,3 +1,6 @@
+gooDB.init();
+gooDB.updateRules();
+
 var fileUtil = new (function() {
     this.exportRules = function() {
         var gooRules = gooDB.getRules();

@@ -1,11 +1,12 @@
 {
-  "name": "gooreplacer",
-  "version": "1.0",
+  "name": "ResRedirector",
+  "version": "1.1",
   "description": "A replacer for google fonts/api/themes.... to load page faster!",
   "permissions": [
       "webRequest", "webRequestBlocking",
       "storage",
       "alarms",
+      "tabs",
       "http://*/*",
       "https://*/*"
   ],
@@ -19,11 +20,11 @@
     "48": "data/img/48.png"
   },
   "browser_action": {
-    "default_title": "gooreplacer 想去哪儿，就去哪儿",
+    "default_title": "ResRedirector 想去哪儿，就去哪儿",
     "default_popup": "data/popup.html"
   },
   "options_page": "data/options.html",
   "author": "http://liujiacai.net",
-  "homepage_url": "https://github.com/jiacai2050/gooreplacer4chrome",
+  "homepage_url": "https://github.com/koozzz/gooreplacer4chrome",
   "manifest_version": 2
 }

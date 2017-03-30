@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>gooreplacer 自定义规则</title>
     <link rel="shortcut icon" href="img/gooreplacer.ico">
     <meta charset="utf-8">
-    <link rel="stylesheet" href="css/bootstrap.min.css" >
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css" >
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="css/jquery-ui.min.css">
     <link rel="stylesheet" href="css/options.css">
     <script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
@@ -14,93 +15,95 @@
     <script type="text/javascript" src="js/db.js"></script>
     <script type="text/javascript" src="js/options.js"></script>
     <style type="text/css">
-      #loadingScreen {
-          background: url(img/ajax-loader.gif) no-repeat 5px 8px;
-          padding-left: 25px;
-      }
-      /* hide the close x on the loading screen */
-      .loadingScreenWindow .ui-dialog-titlebar-close {
-          display: none;
-      }
+        #loadingScreen {
+            background: url(img/ajax-loader.gif) no-repeat 5px 8px;
+            padding-left: 25px;
+        }
+        /* hide the close x on the loading screen */
+        
+        .loadingScreenWindow .ui-dialog-titlebar-close {
+            display: none;
+        }
     </style>
 
 </head>
+
 <body class="container">
     <div class="jumbotron">
-    <h1><img src="img/48.png"></img>gooreplacer<br/></h1>
-    <p>想去哪儿，就去哪儿</p>
+        <h1><img src="img/48.png"></img>gooreplacer<br/></h1>
+        <p>想去哪儿，就去哪儿</p>
 
-    <div class="row">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">
-            <div class="btn-toolbar">
-                <button id="homepage" class="btn btn-default">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <div class="btn-toolbar">
+                    <button id="homepage" class="btn btn-default">
                     <span class='glyphicon glyphicon-home'/>主页
                 </button>
-                <button data-toggle="modal" data-target="#helpModal" class="btn btn-default">
+                    <button data-toggle="modal" data-target="#helpModal" class="btn btn-default">
                     <span class='glyphicon glyphicon-question-sign'/>帮助
                 </button>
-                <div class="btn-group">
-                    <button id="import" class="btn btn-default">
+                    <div class="btn-group">
+                        <button id="import" class="btn btn-default">
                         <span class='glyphicon glyphicon-import'/>导入
                     </button>
-                    <button id="export" class="btn btn-default">
+                        <button id="export" class="btn btn-default">
                         <span class='glyphicon glyphicon-export'/>导出
                     </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+
+        <input type="file" id="gsonChooser" accept=".gson" style="display:none" />
+        <a id="gsonExport" style="display:none" download="gooreplacer.gson"></a>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading lead">在线规则</div>
+        <div class="form-horizontal panel-body">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">更新地址</label>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                        <input class="form-control" type="url" id="onlineURL" spellcheck="false" />
+                        <span class="input-group-btn">
+                                    <button class="btn btn-warning" type="button" id="openURL"><span class="glyphicon glyphicon-chevron-right"/></button>
+                                </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">更新频率</label>
+                <div class="col-sm-2">
+                    <select class="form-control" id="onlineInterval">
+                                <option value="0">关闭</option>
+                                <option value="30">30 分钟</option>
+                                <option value="60">1 小时</option>
+                                <option value="180">3 小时</option>
+                                <option value="360">6 小时</option>
+                                <option value="720">12 小时</option>
+                                <option value="1440">1 天</option>
+                            </select>
+                </div>
+                <div class="col-sm-2 checkbox"><label><input id="onlineEnable" type="checkbox"/>启用</label></div>
+                <div class="col-sm-6">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-danger" id="reset">
+                            <span class="glyphicon glyphicon-repeat" />重置</a>
+                        <a class="btn btn-success" id="onlineSave">
+                            <span class="glyphicon glyphicon-floppy-disk" />保存</a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-4"></div>
-    </div>
-
-    <input type="file" id="gsonChooser" accept=".gson" style="display:none" />
-    <a id="gsonExport" style="display:none" download="gooreplacer.gson"></a>
-    </div>
-
-        <div class="panel panel-primary">
-            <div class="panel-heading lead">在线规则</div>
-            <div class="form-horizontal panel-body">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">更新地址</label>
-                    <div class="col-sm-10">
-                        <div class="input-group">
-                            <input class="form-control" type="url" id="onlineURL" spellcheck="false"/>
-                            <span class="input-group-btn">
-                                <button class="btn btn-warning" type="button" id="openURL"><span class="glyphicon glyphicon-chevron-right"/></button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">更新频率</label>
-                    <div class="col-sm-2">
-                        <select class="form-control" id="onlineInterval">
-                            <option value="0">关闭</option>
-                            <option value="60">1 小时</option>
-                            <option value="180">3 小时</option>
-                            <option value="360">6 小时</option>
-                            <option value="720">12 小时</option>
-                            <option value="1440">1 天</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-2 checkbox"><label><input id="onlineEnable" type="checkbox"/>启用</label></div>
-                    <div class="col-sm-6">
-                        <div class="btn-group btn-group-justified">
-                            <a class="btn btn-danger" id="reset">
-                            <span class="glyphicon glyphicon-repeat"/>重置</a>
-                            <a class="btn btn-success" id="onlineSave">
-                            <span class="glyphicon glyphicon-floppy-disk"/>保存</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="panel-footer clearfix">
-                <label>上次更新时间：<span id="lastUpdateTime"></span></label>
-                <button class="btn btn-info pull-right" id="onlineUpdate">
-                <span class="glyphicon glyphicon-refresh"/>立即更新</button>
-            </div>
+        <div class="panel-footer clearfix">
+            <label>上次更新时间：<span id="lastUpdateTime"></span></label>
+            <button class="btn btn-info pull-right" id="onlineUpdate">
+                    <span class="glyphicon glyphicon-refresh"/>立即更新</button>
         </div>
-    <div class="panel panel-info">
+    </div>
+    <!--<div class="panel panel-default">
         <div class="panel-heading lead clearfix">本地规则
             <button id='removeAll' class="btn btn-danger btn-sm pull-right"><span class="glyphicon glyphicon-remove"/>删除全部</button>
         </div>
@@ -117,8 +120,12 @@
         </table>
         <div class="panel-footer clearfix">
             <button id='add' class="btn btn-success btn-lg col-sm-6 col-md-offset-3"><span class="glyphicon glyphicon-plus"/>添加</button>
+            <button data-toggle="modal" data-target="#editModal" class="btn btn-default">
+                        <span class='glyphicon glyphicon-question-sign'/>添加2
+                    </button>
         </div>
-    </div>
+    </div>-->
+
     <!-- 帮助框 -->
     <div id="helpModal" class="modal fade">
         <div class="modal-dialog">
@@ -143,6 +150,89 @@
     </div>
     <!-- 结束 -->
 
+    <div id="editModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h5 class="modal-title">编辑规则</h5>
+                </div>
+                <div class="form-horizontal modal-body">
+                    <div class="form-group">
+                        <label for="inputDesc" class="col-lg-2 control-label">描述：</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="inputDesc" placeholder="desc">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDesc" class="col-lg-2 control-label">匹配类型：</label>
+                        <div class="col-lg-10">
+                            <div class="radio">
+                                <label>
+                            <input type="radio" name="patternmode" id="optionsRadios1" value="option1" checked="">
+                          通配符
+                        </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+
+                        <input type="radio" name="patternmode"id="optionsRadios2" value="option2">
+                          正则表达式
+                        </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDesc" class="col-lg-2 control-label">匹配规则：</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="inputDesc" placeholder="desc">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDesc" class="col-lg-2 control-label">重定向到：</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="inputDesc">
+                            <span class="help-block">重定向规则，可使用占位符</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="textArea" class="col-lg-2 control-label">适用站点：</label>
+                        <div class="col-lg-10">
+                            <textarea class="form-control" rows="2" id="textArea"></textarea>
+                            <span class="help-block">规则适配的站点，可使用通配符</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="textArea" class="col-lg-2 control-label">排除站点：</label>
+                        <div class="col-lg-10">
+                            <textarea class="form-control" rows="2" id="textArea"></textarea>
+                            <span class="help-block">规则不适用的站点，可使用通配符</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDesc" class="col-lg-2 control-label">启用</label>
+                        <div class="col-lg-10">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"> 启用
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-2">
+                            <input type="button" class="btn btn-primary" value="保存"></input>
+                            <input type="button" class="btn btn-default" value="取消"></input>
+                            <input type="button" class="btn btn-danger pull-right" value="删除"></input>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="loadingScreen"></div>
+
 </body>
+
 </html>
